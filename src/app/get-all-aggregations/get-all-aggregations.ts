@@ -1,20 +1,17 @@
+
 import { Component, signal, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { AsyncService, Post ,ApiResponse} from './get-all-aggregations/async-service';
+import { AsyncService, Post ,ApiResponse} from './async-service';
 import { CommonModule } from '@angular/common';
-import { AddUserComponent } from './add-user/add-user.component';
-import { GetAllAggregations } from './get-all-aggregations/get-all-aggregations';
 
 @Component({
-  selector: 'app-root',
-  imports: [RouterOutlet, CommonModule, AddUserComponent, GetAllAggregations],
-  providers: [AsyncService],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+  selector: 'app-get-all-aggregations',
+  imports: [],
+  templateUrl: './get-all-aggregations.html',
+  styleUrl: './get-all-aggregations.css',
 })
-export class App implements OnInit {
-  title = signal('Async Angular API');
-  posts = signal<Post[]>([]);
+export class GetAllAggregations implements OnInit {
+ 
   apiResponse = signal<ApiResponse| null>(null);
   loading = signal(false);
   error = signal<string | null>(null);
@@ -32,11 +29,11 @@ export class App implements OnInit {
   fetchPosts(): void {
     this.loading.set(true);
     this.error.set(null);
-    
-    this.asyncService.getPosts().subscribe({
-      next: (posts) => {
-        console.log(posts)
-        this.posts.set(posts);
+
+  this.asyncService.getAsyncAgregationResults().subscribe({
+      next: (apiresponse) => {
+        console.log(apiresponse)
+        this.apiResponse.set(apiresponse);
         this.loading.set(false);
       },
       error: (err) => {
@@ -44,8 +41,5 @@ export class App implements OnInit {
         this.loading.set(false);
       }
     });
-
-
-    
   }
 }
