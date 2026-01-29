@@ -24,8 +24,9 @@ export class AddUserComponent {   // <-- must match the export name
     this.http.post(apiUrl, this.user, { headers }).subscribe({
       next: (response) => {
         console.log('User created:', response);
-        alert('User submitted successfully!');
+        //alert('User submitted successfully!');
         this.user = {  name: '' };
+        window.location.reload(); 
       },
       error: (error) => {
         console.error('Error creating user:', error);

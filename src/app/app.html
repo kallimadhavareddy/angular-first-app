@@ -20,7 +20,11 @@
         <div class="menu-section">
           <h4>User Management</h4>
           <app-add-user></app-add-user>
+           <div>
+       
         </div>
+        </div>
+       
         
       
       </nav>
@@ -33,11 +37,19 @@
         </div>
       }
 
+       <app-drag-and-drop></app-drag-and-drop>
+
       <div class="dashboard">
+         <app-get-all-cbusers></app-get-all-cbusers>
+      </div>
+
+      <div class="dashboard">      
         @if (posts().length > 0) {
           <div class="card posts-section">
             <h4>API Data</h4>
+           
           <app-get-all-aggregations></app-get-all-aggregations>
+          
           </div>
         }
 
@@ -51,6 +63,8 @@
         }
         
       </div>
+
+     
 
       
     </main>

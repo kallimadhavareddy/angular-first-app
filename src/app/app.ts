@@ -4,10 +4,12 @@ import { AsyncService, Post ,ApiResponse} from './get-all-aggregations/async-ser
 import { CommonModule } from '@angular/common';
 import { AddUserComponent } from './add-user/add-user.component';
 import { GetAllAggregations } from './get-all-aggregations/get-all-aggregations';
+import { GetAllCbusers } from "./get-all-cbusers/get-all-cbusers";
+import { DragAndDrop } from './drag-and-drop/drag-and-drop';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule, AddUserComponent, GetAllAggregations],
+  imports: [RouterOutlet, CommonModule, AddUserComponent, GetAllAggregations, GetAllCbusers, DragAndDrop],
   providers: [AsyncService],
   templateUrl: './app.html',
   styleUrl: './app.css'
