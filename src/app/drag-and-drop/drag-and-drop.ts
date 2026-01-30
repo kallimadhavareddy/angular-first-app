@@ -1,4 +1,4 @@
-import { Component ,OnInit} from '@angular/core';
+import { Component ,OnInit, ChangeDetectorRef} from '@angular/core';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -9,33 +9,44 @@ import { User } from '../get-all-aggregations/async-service';
 @Component({
   selector: 'app-drag-and-drop',
   imports: [CommonModule, DragDropModule],
+  providers: [CbUserService],
   templateUrl: './drag-and-drop.html',
   styleUrl: './drag-and-drop.css',
 })
 export class DragAndDrop implements OnInit{
 
-constructor(private http: HttpClient,private cbUserService: CbUserService) {}
+constructor(private http: HttpClient,private cbUserService: CbUserService, private cdr: ChangeDetectorRef) {}
 
 ngOnInit(): void {
   this.loadCbUsers();
+  this.loadTempCbUsers();
 }
 
    user = {  name: '' };
-
    cbUsers: CbUserResponse[] = [];
+   cbTempUsers: CbUserResponse[] = [];
    done: string[] = [];
+   todo : string[] = [];
 
   
-  todo = [
-    'Madhava Admin',
-    'Kalli Admin',
-    'Aakash Admin',
-    'Jaasritha Admin',
-    'Bhargavi Admin'
-  ];
-
+loadTempCbUsers() {
+    // 2. Subscribe and assign the values
+    this.cbUserService.getTempCbUsers().subscribe({
   
-
+      next: (data: any[]) => {
+        // Assuming 'data' is an array of objects like [{name: 'John'}, {name: 'Jane'}]
+        // We map it to get just the names for your drag-and-drop lists
+        this.todo = data.map(user => user.name);
+        this.cbTempUsers = data.map(user => user.name);
+        console.log('Temp New array assigned:', this.cbTempUsers);
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Failed to load users', err);
+        this.cdr.detectChanges();
+      }
+    });
+  }
   
 
 loadCbUsers() {
@@ -49,12 +60,16 @@ loadCbUsers() {
         this.cbUsers = data.map(user => user.name);
         console.log('New array assigned:', this.cbUsers);
         this.done = data.map(user => user.username || user.name);
+        this.cdr.detectChanges();
       },
-      error: (err) => console.error('Failed to load users', err)
+      error: (err) => {
+        console.error('Failed to load users', err);
+        this.cdr.detectChanges();
+      }
     });
   }
 
-  drop(event: CdkDragDrop<string[]>) {
+   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -66,9 +81,18 @@ loadCbUsers() {
       );
     }
     if(event.container.data === this.done) {
+      
       console.log('Item moved to done');
       const movedTask = event.container.data[event.currentIndex];
        this.submitUser(movedTask);
+       this.cbUserService.deleteUser(movedTask).subscribe({
+         next: () => {
+           console.log('User deleted successfully:', movedTask);
+         },
+         error: (err) => {
+           console.error('Error deleting user:', err);
+         }
+       });
        window.location.reload();
        
     }
@@ -96,9 +120,6 @@ loadCbUsers() {
       }
     });
   }
-
-
-  
 
 }
 

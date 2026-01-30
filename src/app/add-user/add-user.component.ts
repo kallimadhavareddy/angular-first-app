@@ -14,8 +14,28 @@ export class AddUserComponent {   // <-- must match the export name
 
   constructor(private http: HttpClient) {}
 
-  submitUser() {
-    const apiUrl = 'http://localhost:8080/api/users';
+  // submitUser() {
+  //   const apiUrl = 'http://localhost:8080/api/users';
+  //   const headers = new HttpHeaders({
+  //     'X-API-Key': 'test-key-abcde',
+  //     'Content-Type': 'application/json'
+  //   });
+
+  //   this.http.post(apiUrl, this.user, { headers }).subscribe({
+  //     next: (response) => {
+  //       console.log('User created:', response);
+  //       alert('User submitted successfully!');
+  //       this.user = {  name: '' };
+  //     },
+  //     error: (error) => {
+  //       console.error('Error creating user:', error);
+  //       alert('Error submitting user.');
+  //     }
+  //   });
+  // }
+
+  submitTempUser() {
+    const apiUrl = 'http://localhost:8080/api/temp/users';
     const headers = new HttpHeaders({
       'X-API-Key': 'test-key-abcde',
       'Content-Type': 'application/json'
@@ -24,9 +44,9 @@ export class AddUserComponent {   // <-- must match the export name
     this.http.post(apiUrl, this.user, { headers }).subscribe({
       next: (response) => {
         console.log('User created:', response);
-        //alert('User submitted successfully!');
+        //alert('Temp User submitted successfully!');       
         this.user = {  name: '' };
-        window.location.reload(); 
+         window.location.reload();
       },
       error: (error) => {
         console.error('Error creating user:', error);
